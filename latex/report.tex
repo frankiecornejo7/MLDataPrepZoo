@@ -1,0 +1,225 @@
+\documentclass{article}
+\usepackage{arxiv}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{comment}
+\usepackage[
+backend=biber,
+style=alphabetic,
+sorting=ynt]{biblatex}
+\addbibresource{references.bib}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{lipsum}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{enumerate}
+\usepackage{csquotes}
+
+\title{Featurization of Date-Time Values}
+\author{
+  Francisco Cornejo-Garcia \\ Cypress College, Cypress, CA \\
+  \texttt{franciscornejo.garcia@gmail.com} \And
+  Vraj Shah \\
+  Department of Computer Science \& Engineering \\ University of California, San Diego, CA \\
+  \texttt{vps002@eng.ucsd.edu} \And
+  Dr. Arun Kumar \\
+  Department of Computer Science \& Engineering \\ University of California, San Diego, CA \\
+  \texttt{arunkk@eng.ucsd.edu}
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+The featurization of the date-time format involves the use of three downstream models that include classifiers such as logistic regression, random forest, and a multi-layer perceptron (MLP). Specific features are extracted from the date-time format in order to have different types of data that could potentially improve accuracy or decrease bias when utilized in an upstream machine learning model. The format of a date-time value could include a variety of specialized characters like a hyphen and/or a combination of a string with a number. The potential features that could be extracted from a date-time format include the season, year, month, day, hour, and minute. One of the schemes adopted was using a bi-gram as a baseline. This scheme was tested on multiple data-sets that have a variety of distinct data-types such as time, date, temperature and condition. As the extra features are extracted and compiled into a data-set, several benchmarks were performed with varying results on each data-set. The first benchmark focused only on the original features of the data-set to serve as a baseline to the other benchmarks. The second benchmark classified the extracted features as categorical while the third benchmark viewed them as numeric. The fourth benchmark combined specific characteristics of the previous benchmarks to provide a potentially more accurate result. The results of these experiments led to increased accuracy in determining the data-type of date-time values. This suggests that these experiments have the potential to improve automated data preparation when combined with other Auto-ML techniques.
+\end{abstract}
+
+\section{Introduction}
+This experiment is one of many in attempts to formalize the preparation of data for automated machine learning platforms. By applying a machine learning model to prepare the data instead of manually cleaning each data point, it could potentially increase overall productivity and speed up development on various ML projects. One of the approaches taken toward this idea is the featurization of date-time values. There are multiple features that could be extracted from values that may be in a format as a date or a time. They include the year, month, day, and season, as well as UTC, timezone, hour, and minute. By analyzing the impact of the additional extracted features, we can see whether it provides a better accuracy for the data-set as a whole. All the data and code is stored online in a Github repository \cite{MLDataPrepZoo}.
+
+\section{Data-sets}
+There are three data-sets that were tested in four distinct benchmarks. The first data-set contains features such as temperature, date, time, and conditions that was recorded hourly in New York City. The second data-set focuses on temperature that is noted by date and time in an arbitrary room by an IOT device. It should be noted that this data is experimental and therefore more complex to derive conclusive observations. The third data-set includes avocado prices and sales, recorded along the various times and dates they are sold. 
+
+\section{Featurization Techniques}
+The technique that were utilized to extract features is a python library called parse that is imported as part of a python module called dateutil \cite{dateutil}. This library can automatically parse specific features out of various date and time formats, which provides greater flexibility when going through different types of formats in the same data-set. Before parsing the date-time values, the values are validated to ensure their format and left to manual processing should there be any missed errors.
+
+\section{Benchmarks}
+The benchmarks are used as a way to test and build machine-learning methods that can be tested and compared with other methods. There are four benchmarks that organizes data differently into distinct elements. One example of this involves a NYC data-set that is served as input to a machine learning algorithm. Depending on the output and performance of the algorithm, it can therefore be used to compare against another data-set that underwent a different algorithm, to see whether these algorithms and data-sets can produce a more accurate result.
+
+\paragraph{Benchmark 1}
+The first benchmark serves as a baseline for the data-sets, as it only uses a bi-gram to analyze the original date-time values to compare against future benchmarks. The only elements that is consistent between the four benchmarks is this method as well as an arbitrary non-date-time target column that the three ML methods perform with. 
+
+\paragraph{Benchmark 2}
+The second benchmark classifies the extracted features as numeric along with the original baseline, which can help during the logistic regression method.
+
+\paragraph{Benchmark 3}
+The third benchmark classifies the extracted features as categorical, which can potentially allow random forest method to provide a more accurate output.
+
+\paragraph{Benchmark 4}
+The fourth benchmark classifies the extracted features as both categorical and numeric, which may increase processing time but potentially increase accuracy. 
+
+\section{Empirical Study and Analysis}
+The three data-sets that were tested against the four benchmarks provided very different results. While it was possible that the extra features could increase the downstream models' accuracy, the results presents a different picture.
+
+\subsection{Methodology}
+The methods used on these data-sets are consistent among all benchmarks. Features are extracted from the data-sets with the parse method from the dateutil Python library that can automatically parse a flexible date-time format such as whether the date may have slashes or hypthens. After extracting specific features such as the hour, minutes, year, month, and day, these features are then combined into a new data-set that is then tested against the original data-set through the four benchmarks. The average training accuracy, validation accuracy and the test accuracy are compared with the other accuracy values from the other three benchmarks. 
+
+\def\arraystretch{1.5}
+\begin{table}[ht]
+\caption{NYC Data-set}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+date & TimeEST & TemperatureF & Dew PointF & Humidity & Wind SpeedMPH & Conditions \\
+\hline
+2016-01-01 & 12:51 AM &	42.1 & 25 & 51 & 4.6 & Overcast \\
+\hline
+2016-01-01 & 1:51 AM & 41 & 25 & 53 & 3.5 & Overcast \\
+\hline
+2016-01-01 & 2:51 AM & 41 & 26.1 & 55 & 4.6 & Overcast \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{NYC Data-set}
+This NYC data-set records the temperature and other values at a consistent hourly interval. The machine learning methods are compared against a common target, which is the \textit{Conditions} column. The columns represent the date and the time that the following data is recorded, such as the weather, the humidity, wind speed, and the conditions. For all benchmarks, the extracted features are the year, month, day as well as the hour and minute. 
+
+\def\arraystretch{1}
+\begin{table}[ht]
+\caption{NYC Temperature Benchmarks}
+\centering
+    \begin{tabular}{lcccc}
+    \toprule
+    Logistic Regression Benchmarks & Baseline (1) & Numeric (2) & Categorical (3) & Numeric / Categorical (4) \\
+    \midrule
+    Avg Training Accuracy & 0.508 & 0.542 & 0.509 & 0.707 \\
+    Validation Accuracy & 0.512 & 0.526 & 0.504 & 0.620 \\
+    Test Accuracy & 0.519 & 0.540 & 0.517 & 0.629 \\
+    \midrule
+    Random Forest Benchmarks & & & & \\
+    \midrule
+    Avg Training Accuracy & 0.924 & 0.909 & 0.924 & 0.914 \\
+    Validation Accuracy & 0.671 & 0.613 & 0.679 & 0.627 \\
+    Test Accuracy & 0.690 & 0.623 & 0.691 & 0.643 \\
+    \midrule
+    MLP Classifier Benchmarks & & & & \\
+    \midrule
+    Avg Training Accuracy & 0.584 & 0.999 & 0.875 & 1.000 \\
+    Validation Accuracy & 0.584 & 0.999 & 0.858 & 1.000 \\
+    Test Accuracy & 0.551 & 0.624 & 0.667 & 0.671 \\ 
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{NYC Benchmarks Analysis}
+The results varied depending which ML method was applied, which makes sense given the distinct classification of data. For logistic regression, the second benchmark improved slightly as well as a significant increase for the fourth benchmark, with the additional features both classified as numeric and categorical. There was not much variability for the random forest method. However, for the multi-layer perceptron, accuracy improved among the custom benchmarks. This suggests that these experiments has the potential to improve automated data prep when combined with other Auto-ML techniques, depending on which downstream method is used. It should be noted that most of the experiments were conducted on the Cloud Lab servers provided by UCSD. \cite{Duplyakin+:ATC19}
+
+\def\arraystretch{1.5}
+\begin{table}[ht]
+\caption{IOT Data-set}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+id & room\_id\/id & noted\_date & temp & out\/in \\
+\hline
+\_\_export\_\_.temp\_log\_196134\_bd201015 & Room Admin & 08-12-2018 9:30 & 29 & In \\
+\hline
+\_\_export\_\_.temp\_log\_196131\_7bca51bc & Room Admin & 08-12-2018 9:30 & 29 & In \\
+\hline
+\_\_export\_\_.temp\_log\_196127\_522915e3 & Room Admin & 08-12-2018 9:29 & 41 & Out \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{IOT Data-set}
+This IOT data-set records the temperature and other values at a seemingly random interval. The machine learning methods are compared against a common target, which is the \textit{out/in} column, which represents when a person is in or out of the room where the data is collected. The columns represent the date and the time that the following data is recorded, such an arbitrary id, the person in charge, and whether the person is in or out of the room. For all benchmarks, the extracted features are the year, month, day as well as the hour and minute. 
+
+\def\arraystretch{1}
+\begin{table}[ht]
+\caption{IOT Benchmarks}
+\centering
+    \begin{tabular}{lcccc}
+    \toprule
+    Logistic Regression Benchmarks & Baseline (1) & Numeric (2) & Categorical (3) & Numeric / Categorical (4) \\
+    \midrule
+    Avg Training Accuracy & 0.837 & 0.798 &	0.859 &	0.812 \\
+    Validation Accuracy & 0.837	& 0.795	& 0.858	& 0.811 \\
+    Test Accuracy & 0.837 &	0.792 &	0.858 &	0.808 \\
+    \midrule
+    Random Forest Benchmarks & & & & \\
+    \midrule
+    Avg Training Accuracy & 0.950 &	0.898 &	0.946 &	0.886 \\
+    Validation Accuracy & 0.935	& 0.848	& 0.931	& 0.846 \\
+    Test Accuracy & 0.937 &	0.846 &	0.933 &	0.845 \\
+    \midrule
+    MLP Classifier Benchmarks & & & & \\
+    \midrule
+    Avg Training Accuracy & 0.952 &	0.911 &	0.951 &	0.914 \\
+    Validation Accuracy & 0.952	& 0.911	& 0.951	& 0.914 \\
+    Test Accuracy & 0.937 &	0.848 &	0.936 &	0.857 \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{IOT Benchmarks Analysis}
+This data-set presented interesting results that may go against the initial hypothesis that having extra features can be helpful. Across all three ML methods, there was not much improvement. This may be due to the nature of the data itself, as there are more missing values and incorrectly recorded data due to the experimental device used to create this data-set. 
+
+\def\arraystretch{1.5}
+\begin{table}[ht]
+\caption{Avocado Data-set}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Date & AveragePrice & Total Volume & 4046... & Total Bags & Small Bags... & type & year & region \\
+\hline
+2015-12-27 & 1.33 & 64236.62 & 1036.74 & 8696.87 & 8603.62 & conventional & 2015 & Albany \\
+\hline
+2015-12-20 & 1.35 & 54876.98 & 74.28 & 9505.56 & 9408.07 & conventional & 2015 & Albany \\
+\hline
+2015-12-13 & 0.93 & 118220.22 & 794.7 & 8145.35 & 8042.21 & conventional & 2015 & Albany \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Avocado Data-set}
+This Avocado data-set records the temperature and other values whenever avocados are bought. The machine learning methods are compared against a common target, which is the \textit{type} column. The columns represent the date and the time that the following data is recorded, such as the type of avocado, the bags the avocados came in, and what region the avocado was sold. For all benchmarks, the extracted features are the year, month, day as well as the hour and minute. 
+
+\def\arraystretch{1}
+\begin{table}[ht]
+\caption{Avocado Benchmarks}
+\centering
+    \begin{tabular}{lcccc}
+    \toprule
+    Logistic Regression Benchmarks & Baseline (1) & Numeric (2) & Categorical (3) & Numeric / Categorical (4) \\
+    \midrule
+    Avg Training Accuracy & 0.845 &	0.503 &	0.846 &	0.504 \\
+    Validation Accuracy & 0.846	& 0.494	& 0.847	& 0.492 \\
+    Test Accuracy & 0.842 &	0.492 &	0.843 &	0.489 \\
+    \midrule
+    Random Forest Benchmarks & & & & \\
+    \midrule
+    Avg Training Accuracy & 0.993 &	0.511 &	0.992 &	0.507 \\
+    Validation Accuracy & 0.976	& 0.474	& 0.970	& 0.485 \\
+    Test Accuracy & 0.977 &	0.484 &	0.968 &	0.486 \\
+    \midrule
+    MLP Classifier Benchmarks & & & & \\
+    \midrule
+    Avg Training Accuracy & 0.919 &	0.516 &	0.944 &	0.517 \\
+    Validation Accuracy & 0.919	& 0.516	& 0.944	& 0.517 \\
+    Test Accuracy & 0.918 &	0.433 &	0.939 &	0.430 \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Avocado Benchmarks Analysis}
+This data-set also provides a similar result to the IOT data-set, which also contains data that varies more unpredictably than the NYC data-set. Since the sales of avocado varies, the dates and times also vary. This further supports the observation that having extra features may not necessarily be better for date-time values, and if so, it may depend on the nature of the data recorded.
+
+\section{Discussion}
+As this experiment provided varying results, it potentially shows that when applying data prep methods through machine learning, it can have varying effects depending on the data. Since the NYC data-set records data at an  hourly interval with nearly non-existent empty values, it could potentially show that date-time values, when multiple features are extracted from it, may be of some use only at specific times and dates that is consistent through the data-set. Having seemingly random times and dates could potentially hinder the process of finding patterns and connections among the extracted features. 
+
+\printbibliography
+\end{document}
